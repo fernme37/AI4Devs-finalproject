@@ -242,6 +242,18 @@ a {
   background: #ffffff;
 }
 
+.table-scroll {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.table-scroll .p-datatable {
+  min-width: 620px;
+}
+
 .lot-panel {
   padding: 8px 10px 12px;
   background: #f6f7f9;
@@ -286,15 +298,24 @@ a {
 .result-panel {
   display: grid;
   gap: 14px;
+  min-width: 0;
   padding: 16px;
   border: 1px solid #d9dee7;
   border-radius: 8px;
   background: #ffffff;
 }
 
+.sales-form .two-columns > .field,
+.quotation-form .two-columns > .field,
+.dispatch-form .two-columns > .field {
+  grid-template-rows: auto 42px minmax(18px, auto);
+  align-content: start;
+}
+
 .form-section {
   display: grid;
   gap: 12px;
+  min-width: 0;
 }
 
 .form-section h3,
@@ -402,6 +423,7 @@ a {
 .quotation-summary {
   display: grid;
   gap: 14px;
+  min-width: 0;
   padding: 16px;
   border: 1px solid #d9dee7;
   border-radius: 8px;
@@ -513,6 +535,7 @@ a {
 .dispatch-summary {
   display: grid;
   gap: 14px;
+  min-width: 0;
   padding: 16px;
   border: 1px solid #d9dee7;
   border-radius: 8px;
@@ -765,11 +788,13 @@ a {
 .form-grid {
   display: grid;
   gap: 14px;
+  min-width: 0;
 }
 
 .field {
   display: grid;
   gap: 6px;
+  min-width: 0;
 }
 
 .field label {
@@ -779,13 +804,52 @@ a {
 
 .field input {
   width: 100%;
+  min-width: 0;
   min-height: 42px;
   padding: 8px 10px;
   border: 1px solid #cbd3df;
   border-radius: 6px;
 }
 
+.field textarea,
+.field .p-inputnumber,
+.field .p-inputtext {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100%;
+}
+
+.field .p-select {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100%;
+  min-height: 42px;
+  height: 42px;
+  align-items: center;
+  border-radius: 6px;
+}
+
+.field .p-select-label {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 40px;
+  padding: 8px 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.field .p-select-dropdown {
+  flex: 0 0 42px;
+  width: 42px;
+}
+
 .primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   min-height: 42px;
   border: 0;
   border-radius: 6px;
@@ -802,6 +866,66 @@ a {
 .error-text {
   color: #b42318;
   font-size: 0.9rem;
+}
+
+@media (max-width: 1200px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    padding: 12px 16px;
+  }
+
+  .nav-list {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .nav-link,
+  .logout-button {
+    min-height: 40px;
+    white-space: nowrap;
+  }
+
+  .logout-button {
+    width: auto;
+    margin-top: 0;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .section-heading {
+    flex-wrap: wrap;
+  }
+
+  .sales-layout,
+  .quotation-layout,
+  .logistics-layout,
+  .result-grid,
+  .metric-strip,
+  .quote-kpis,
+  .admin-kpis,
+  .admin-grid,
+  .toolbar-surface,
+  .two-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar-actions,
+  .section-heading button {
+    width: 100%;
+  }
 }
 
 @media (max-width: 760px) {

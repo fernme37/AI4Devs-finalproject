@@ -516,13 +516,15 @@ function paymentLabel(value: string): string {
         <Tag severity="success" value="Pagado" />
       </div>
 
-      <DataTable :value="saleResult.stockAfectado" data-key="idLote" responsive-layout="scroll">
-        <Column field="modeloTeja" header="Modelo" />
-        <Column field="codigoLote" header="Lote" />
-        <Column field="cantidadDescontada" header="Descontado" />
-        <Column field="stockLoteRestante" header="Stock lote" />
-        <Column field="stockGlobalRestante" header="Stock global" />
-      </DataTable>
+      <div class="table-scroll">
+        <DataTable :value="saleResult.stockAfectado" data-key="idLote" responsive-layout="scroll">
+          <Column field="modeloTeja" header="Modelo" />
+          <Column field="codigoLote" header="Lote" />
+          <Column field="cantidadDescontada" header="Descontado" />
+          <Column field="stockLoteRestante" header="Stock lote" />
+          <Column field="stockGlobalRestante" header="Stock global" />
+        </DataTable>
+      </div>
     </section>
   </section>
 </template>

@@ -369,10 +369,12 @@ function formatCurrency(value: number): string {
       </div>
 
       <div class="result-grid">
-        <DataTable :value="resultRows" responsive-layout="scroll" class="compact-table">
-          <Column field="label" header="Concepto" />
-          <Column field="value" header="Valor" />
-        </DataTable>
+        <div class="table-scroll">
+          <DataTable :value="resultRows" responsive-layout="scroll" class="compact-table">
+            <Column field="label" header="Concepto" />
+            <Column field="value" header="Valor" />
+          </DataTable>
+        </div>
 
         <dl class="totals-list">
           <div>

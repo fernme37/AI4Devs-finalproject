@@ -325,101 +325,104 @@ function formatDate(value: string): string {
       <ProgressSpinner aria-label="Cargando inventario" />
     </div>
 
-    <DataTable
-      v-else
-      v-model:expanded-rows="expandedRows"
-      :value="inventory"
-      data-key="idTeja"
-      striped-rows
-      show-gridlines
-      responsive-layout="scroll"
-      class="inventory-table"
-      empty-message="No hay tejas que coincidan con los filtros."
-    >
-      <Column expander style="width: 3rem" />
-      <Column field="modelo" header="Modelo" sortable />
-      <Column field="material" header="Material" sortable />
-      <Column field="color" header="Color" sortable />
-      <Column header="Medidas">
-        <template #body="{ data }: { data: TejaInventario }">
-          {{ data.longitudCm }} x {{ data.anchoCm }} cm
-        </template>
-      </Column>
-      <Column header="Peso">
-        <template #body="{ data }: { data: TejaInventario }">
-          {{ data.pesoKg }} kg
-        </template>
-      </Column>
-      <Column header="Precio base">
-        <template #body="{ data }: { data: TejaInventario }">
-          {{ formatCurrency(data.precioBase) }}
-        </template>
-      </Column>
-      <Column field="stockGlobal" header="Stock" sortable />
-      <Column header="Estado">
-        <template #body="{ data }: { data: TejaInventario }">
-          <Tag
-            :severity="data.requiereReorden ? 'danger' : 'success'"
-            :value="data.requiereReorden ? 'Reorden' : 'Disponible'"
-          />
-        </template>
-      </Column>
-      <Column header="Acciones" style="width: 10rem">
-        <template #body="{ data }: { data: TejaInventario }">
-          <Button
-            v-if="canRegisterMerma"
-            type="button"
-            severity="danger"
-            text
-            title="Registrar merma"
-            :disabled="data.stockGlobal <= 0"
-            @click="openMermaDialog(data)"
-          >
-            <Trash2 :size="17" aria-hidden="true" />
-            <span>Merma</span>
-          </Button>
-        </template>
-      </Column>
+    <div v-else class="table-scroll">
+      <DataTable
+        v-model:expanded-rows="expandedRows"
+        :value="inventory"
+        data-key="idTeja"
+        striped-rows
+        show-gridlines
+        responsive-layout="scroll"
+        class="inventory-table"
+        empty-message="No hay tejas que coincidan con los filtros."
+      >
+        <Column expander style="width: 3rem" />
+        <Column field="modelo" header="Modelo" sortable />
+        <Column field="material" header="Material" sortable />
+        <Column field="color" header="Color" sortable />
+        <Column header="Medidas">
+          <template #body="{ data }: { data: TejaInventario }">
+            {{ data.longitudCm }} x {{ data.anchoCm }} cm
+          </template>
+        </Column>
+        <Column header="Peso">
+          <template #body="{ data }: { data: TejaInventario }">
+            {{ data.pesoKg }} kg
+          </template>
+        </Column>
+        <Column header="Precio base">
+          <template #body="{ data }: { data: TejaInventario }">
+            {{ formatCurrency(data.precioBase) }}
+          </template>
+        </Column>
+        <Column field="stockGlobal" header="Stock" sortable />
+        <Column header="Estado">
+          <template #body="{ data }: { data: TejaInventario }">
+            <Tag
+              :severity="data.requiereReorden ? 'danger' : 'success'"
+              :value="data.requiereReorden ? 'Reorden' : 'Disponible'"
+            />
+          </template>
+        </Column>
+        <Column header="Acciones" style="width: 10rem">
+          <template #body="{ data }: { data: TejaInventario }">
+            <Button
+              v-if="canRegisterMerma"
+              type="button"
+              severity="danger"
+              text
+              title="Registrar merma"
+              :disabled="data.stockGlobal <= 0"
+              @click="openMermaDialog(data)"
+            >
+              <Trash2 :size="17" aria-hidden="true" />
+              <span>Merma</span>
+            </Button>
+          </template>
+        </Column>
 
-      <template #expansion="{ data }: { data: TejaInventario }">
-        <div class="lot-panel">
-          <DataTable :value="data.lotes" data-key="idLote" responsive-layout="scroll">
-            <Column field="codigoLote" header="Lote" />
-            <Column header="Entrada">
-              <template #body="{ data: lot }: { data: LoteInventario }">
-                {{ formatDate(lot.fechaEntrada) }}
-              </template>
-            </Column>
-            <Column field="cantidadInicial" header="Inicial" />
-            <Column field="cantidadActual" header="Actual" />
-            <Column header="Disponibilidad">
-              <template #body="{ data: lot }: { data: LoteInventario }">
-                <Tag
-                  :severity="lot.cantidadActual > 0 ? 'info' : 'secondary'"
-                  :value="lot.cantidadActual > 0 ? 'Con stock' : 'Sin stock'"
-                />
-              </template>
-            </Column>
-            <Column header="Accion" style="width: 9rem">
-              <template #body="{ data: lot }: { data: LoteInventario }">
-                <Button
-                  v-if="canRegisterMerma"
-                  type="button"
-                  severity="danger"
-                  text
-                  title="Registrar merma en lote"
-                  :disabled="lot.cantidadActual <= 0"
-                  @click="openMermaDialog(data, lot)"
-                >
-                  <Trash2 :size="16" aria-hidden="true" />
-                  <span>Merma</span>
-                </Button>
-              </template>
-            </Column>
-          </DataTable>
-        </div>
-      </template>
-    </DataTable>
+        <template #expansion="{ data }: { data: TejaInventario }">
+          <div class="lot-panel">
+            <div class="table-scroll">
+              <DataTable :value="data.lotes" data-key="idLote" responsive-layout="scroll">
+                <Column field="codigoLote" header="Lote" />
+                <Column header="Entrada">
+                  <template #body="{ data: lot }: { data: LoteInventario }">
+                    {{ formatDate(lot.fechaEntrada) }}
+                  </template>
+                </Column>
+                <Column field="cantidadInicial" header="Inicial" />
+                <Column field="cantidadActual" header="Actual" />
+                <Column header="Disponibilidad">
+                  <template #body="{ data: lot }: { data: LoteInventario }">
+                    <Tag
+                      :severity="lot.cantidadActual > 0 ? 'info' : 'secondary'"
+                      :value="lot.cantidadActual > 0 ? 'Con stock' : 'Sin stock'"
+                    />
+                  </template>
+                </Column>
+                <Column header="Accion" style="width: 9rem">
+                  <template #body="{ data: lot }: { data: LoteInventario }">
+                    <Button
+                      v-if="canRegisterMerma"
+                      type="button"
+                      severity="danger"
+                      text
+                      title="Registrar merma en lote"
+                      :disabled="lot.cantidadActual <= 0"
+                      @click="openMermaDialog(data, lot)"
+                    >
+                      <Trash2 :size="16" aria-hidden="true" />
+                      <span>Merma</span>
+                    </Button>
+                  </template>
+                </Column>
+              </DataTable>
+            </div>
+          </div>
+        </template>
+      </DataTable>
+    </div>
 
     <Dialog
       v-model:visible="mermaDialogVisible"

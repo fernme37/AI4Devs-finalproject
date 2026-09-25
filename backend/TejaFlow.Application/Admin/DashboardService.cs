@@ -72,19 +72,28 @@ public sealed class DashboardService
             .Select(merma => (decimal?)(merma.CantidadRotas * merma.Lote!.Teja!.PrecioBase))
             .SumAsync(cancellationToken) ?? 0m;
 
-        var ventasMensuales = await paidOrders
+        var ventasMensualesAgregadas = await paidOrders
             .Where(pedido => pedido.FechaPedido >= yearStart)
             .GroupBy(pedido => new { pedido.FechaPedido.Year, pedido.FechaPedido.Month })
-            .Select(group => new VentaMensualDto(
-                group.Key.Year,
-                group.Key.Month,
-                $"{group.Key.Year}-{group.Key.Month:00}",
-                group.Sum(pedido => pedido.Total)))
+            .Select(group => new
+            {
+                Anio = group.Key.Year,
+                Mes = group.Key.Month,
+                Total = group.Sum(pedido => pedido.Total)
+            })
             .OrderBy(item => item.Anio)
             .ThenBy(item => item.Mes)
             .ToListAsync(cancellationToken);
 
-        var modelosMasVendidos = await _context.DetallesPedido
+        var ventasMensuales = ventasMensualesAgregadas
+            .Select(item => new VentaMensualDto(
+                item.Anio,
+                item.Mes,
+                $"{item.Anio}-{item.Mes:00}",
+                item.Total))
+            .ToList();
+
+        var modelosMasVendidosAgregados = await _context.DetallesPedido
             .AsNoTracking()
             .Include(detalle => detalle.Pedido)
             .Include(detalle => detalle.Teja)
@@ -92,25 +101,44 @@ public sealed class DashboardService
                 && detalle.Pedido.EstadoPedido != EstadoPedido.Cotizacion
                 && detalle.Pedido.EstadoPedido != EstadoPedido.Cancelado)
             .GroupBy(detalle => new { detalle.IdTeja, detalle.Teja!.Modelo })
-            .Select(group => new ModeloVendidoDto(
+            .Select(group => new
+            {
                 group.Key.IdTeja,
                 group.Key.Modelo,
-                group.Sum(detalle => detalle.CantidadSolicitada),
-                group.Sum(detalle => detalle.Subtotal)))
+                CantidadVendida = group.Sum(detalle => detalle.CantidadSolicitada),
+                TotalVendido = group.Sum(detalle => detalle.CantidadSolicitada * detalle.PrecioUnitarioAplicado)
+            })
             .OrderByDescending(item => item.CantidadVendida)
             .Take(5)
             .ToListAsync(cancellationToken);
 
-        var pagosPorMetodo = await _context.PagosVenta
+        var modelosMasVendidos = modelosMasVendidosAgregados
+            .Select(item => new ModeloVendidoDto(
+                item.IdTeja,
+                item.Modelo,
+                item.CantidadVendida,
+                item.TotalVendido))
+            .ToList();
+
+        var pagosPorMetodoAgregados = await _context.PagosVenta
             .AsNoTracking()
             .Where(pago => pago.EstadoPago == EstadoPago.Pagado)
             .GroupBy(pago => pago.MetodoPago)
-            .Select(group => new PagoMetodoDto(
-                group.Key.ToString(),
-                group.Count(),
-                group.Sum(pago => pago.Monto)))
+            .Select(group => new
+            {
+                MetodoPago = group.Key,
+                Conteo = group.Count(),
+                TotalPagado = group.Sum(pago => pago.Monto)
+            })
             .OrderByDescending(item => item.TotalPagado)
             .ToListAsync(cancellationToken);
+
+        var pagosPorMetodo = pagosPorMetodoAgregados
+            .Select(item => new PagoMetodoDto(
+                item.MetodoPago.ToString(),
+                item.Conteo,
+                item.TotalPagado))
+            .ToList();
 
         return new DashboardDto(
             ingresoMesActual,

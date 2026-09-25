@@ -209,15 +209,17 @@ function formatDate(value: string): string {
           <div class="panel-heading">
             <h3>Modelos mas vendidos</h3>
           </div>
-          <DataTable :value="dashboard.modelosMasVendidos" data-key="idTeja" responsive-layout="scroll">
-            <Column field="modeloTeja" header="Modelo" />
-            <Column field="cantidadVendida" header="Piezas" />
-            <Column header="Total">
-              <template #body="{ data }: { data: ModeloVendido }">
-                {{ formatCurrency(data.totalVendido) }}
-              </template>
-            </Column>
-          </DataTable>
+          <div class="table-scroll">
+            <DataTable :value="dashboard.modelosMasVendidos" data-key="idTeja" responsive-layout="scroll">
+              <Column field="modeloTeja" header="Modelo" />
+              <Column field="cantidadVendida" header="Piezas" />
+              <Column header="Total">
+                <template #body="{ data }: { data: ModeloVendido }">
+                  {{ formatCurrency(data.totalVendido) }}
+                </template>
+              </Column>
+            </DataTable>
+          </div>
         </section>
 
         <section class="dashboard-panel wide-panel">
@@ -225,40 +227,44 @@ function formatDate(value: string): string {
             <h3>Alertas de reorden</h3>
             <Tag :severity="dashboard.alertasReorden > 0 ? 'danger' : 'success'" :value="String(dashboard.alertasReorden)" />
           </div>
-          <DataTable :value="dashboard.alertasInventario" data-key="idTeja" responsive-layout="scroll">
-            <Column field="modelo" header="Modelo" />
-            <Column field="material" header="Material" />
-            <Column field="color" header="Color" />
-            <Column field="stockGlobal" header="Stock" />
-            <Column field="stockMinimo" header="Minimo" />
-            <Column header="Precio base">
-              <template #body="{ data }: { data: AlertaReorden }">
-                {{ formatCurrency(data.precioBase) }}
-              </template>
-            </Column>
-          </DataTable>
+          <div class="table-scroll">
+            <DataTable :value="dashboard.alertasInventario" data-key="idTeja" responsive-layout="scroll">
+              <Column field="modelo" header="Modelo" />
+              <Column field="material" header="Material" />
+              <Column field="color" header="Color" />
+              <Column field="stockGlobal" header="Stock" />
+              <Column field="stockMinimo" header="Minimo" />
+              <Column header="Precio base">
+                <template #body="{ data }: { data: AlertaReorden }">
+                  {{ formatCurrency(data.precioBase) }}
+                </template>
+              </Column>
+            </DataTable>
+          </div>
         </section>
 
         <section class="dashboard-panel wide-panel">
           <div class="panel-heading">
             <h3>Mermas recientes</h3>
           </div>
-          <DataTable :value="dashboard.mermasRecientes" data-key="idMerma" responsive-layout="scroll">
-            <Column field="modeloTeja" header="Modelo" />
-            <Column field="codigoLote" header="Lote" />
-            <Column field="cantidadRotas" header="Piezas" />
-            <Column field="motivo" header="Motivo" />
-            <Column header="Perdida">
-              <template #body="{ data }: { data: MermaResumen }">
-                {{ formatCurrency(data.perdidaEstimada) }}
-              </template>
-            </Column>
-            <Column header="Fecha">
-              <template #body="{ data }: { data: MermaResumen }">
-                {{ formatDate(data.fechaRegistro) }}
-              </template>
-            </Column>
-          </DataTable>
+          <div class="table-scroll">
+            <DataTable :value="dashboard.mermasRecientes" data-key="idMerma" responsive-layout="scroll">
+              <Column field="modeloTeja" header="Modelo" />
+              <Column field="codigoLote" header="Lote" />
+              <Column field="cantidadRotas" header="Piezas" />
+              <Column field="motivo" header="Motivo" />
+              <Column header="Perdida">
+                <template #body="{ data }: { data: MermaResumen }">
+                  {{ formatCurrency(data.perdidaEstimada) }}
+                </template>
+              </Column>
+              <Column header="Fecha">
+                <template #body="{ data }: { data: MermaResumen }">
+                  {{ formatDate(data.fechaRegistro) }}
+                </template>
+              </Column>
+            </DataTable>
+          </div>
         </section>
       </div>
     </template>

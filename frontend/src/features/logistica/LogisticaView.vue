@@ -356,23 +356,25 @@ function formatCurrency(value: number): string {
             </div>
           </div>
 
-          <DataTable :value="dispatchLines" data-key="idDetallePedido" responsive-layout="scroll">
-            <Column field="modeloTeja" header="Modelo" />
-            <Column field="cantidadSolicitada" header="Solicitado" />
-            <Column field="cantidadDespachada" header="Despachado" />
-            <Column field="cantidadPendiente" header="Pendiente" />
-            <Column header="Enviar" style="width: 12rem">
-              <template #body="{ data }: { data: DetallePendienteEntrega & { cantidadEnviada: number } }">
-                <InputNumber
-                  v-model="form.cantidades[data.idDetallePedido]"
-                  :min="0"
-                  :max="data.cantidadPendiente"
-                  show-buttons
-                  input-class="quantity-cell-input"
-                />
-              </template>
-            </Column>
-          </DataTable>
+          <div class="table-scroll">
+            <DataTable :value="dispatchLines" data-key="idDetallePedido" responsive-layout="scroll">
+              <Column field="modeloTeja" header="Modelo" />
+              <Column field="cantidadSolicitada" header="Solicitado" />
+              <Column field="cantidadDespachada" header="Despachado" />
+              <Column field="cantidadPendiente" header="Pendiente" />
+              <Column header="Enviar" style="width: 12rem">
+                <template #body="{ data }: { data: DetallePendienteEntrega & { cantidadEnviada: number } }">
+                  <InputNumber
+                    v-model="form.cantidades[data.idDetallePedido]"
+                    :min="0"
+                    :max="data.cantidadPendiente"
+                    show-buttons
+                    input-class="quantity-cell-input"
+                  />
+                </template>
+              </Column>
+            </DataTable>
+          </div>
         </div>
 
         <Message v-if="formError" severity="warn" :closable="false">{{ formError }}</Message>
@@ -441,13 +443,15 @@ function formatCurrency(value: number): string {
         />
       </div>
 
-      <DataTable :value="dispatchResult.remisiones" data-key="idRemision" responsive-layout="scroll">
-        <Column field="modeloTeja" header="Modelo" />
-        <Column field="cantidadEnviada" header="Enviado" />
-        <Column field="cantidadDespachada" header="Despachado" />
-        <Column field="cantidadPendiente" header="Pendiente" />
-        <Column field="firmaRecibido" header="Firma" />
-      </DataTable>
+      <div class="table-scroll">
+        <DataTable :value="dispatchResult.remisiones" data-key="idRemision" responsive-layout="scroll">
+          <Column field="modeloTeja" header="Modelo" />
+          <Column field="cantidadEnviada" header="Enviado" />
+          <Column field="cantidadDespachada" header="Despachado" />
+          <Column field="cantidadPendiente" header="Pendiente" />
+          <Column field="firmaRecibido" header="Firma" />
+        </DataTable>
+      </div>
     </section>
   </section>
 </template>
